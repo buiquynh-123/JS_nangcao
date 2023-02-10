@@ -29,110 +29,181 @@ const username = document.querySelector(".username");
 const iduser = document.querySelector(".iduser");
 const login = document.querySelector(".login");
 const container = document.querySelector(".container");
-const totalmoney = 0;
+const containerMovements = document.querySelector(".money_transfer_list");
+const money = document.querySelector(".money");
 
+const totalmoney = document.querySelector(".totalmoney");
+const labelSumIn = document.querySelector(".labelSumIn");
+const labelSumOut = document.querySelector(".labelSumOut");
+const labelSumInterest = document.querySelector(".labelSumInterest");
+const labelWelCome = document.querySelector(".labelwelcome");
+const currentBalance =document.querySelector('.current--balance');
+const btnTransFer = document.querySelector(".btntransfer");
+const transferTo = document.querySelector(".transferto");
+const amount = document.querySelector(".amount");
+const btnClose = document.querySelector(".btn-close");
+const inputCloseName = document.querySelector('.input_close_name');
+const inputClosePin = document.querySelector('.input_close_pin')
+const btnLoan = document.querySelector('.btn--loan');
+const inputLoanAmount = document.querySelector('.input--loan-amount');
+const btnSort = document.querySelector('.btn-sort');
 
-console.log(container)
-form.addEventListener("submit", (e) => {
-    e.preventDefault();
-    accounts.forEach((item) => {
-        if(username.value == item.owner && iduser.value == item.pin){
+console.log(inputCloseName, inputClosePin)
+console.log(totalmoney);
+const moneyTransferList = document.querySelector(".money_transfer_list");
+console.log(moneyTransferList);
 
-            const money = item.movements;
-            console.log(money)
-          
-            
-         
-            container.innerHTML = `
-            <div class="flex justify-between py-10">
-            <div>
-                <h2 class="text-3xl font-medium">HELLO ${item.owner}</h2>
-                <h2 class="text-3xl font-medium">Current balance</h2>
-                <p class="text-slate-400">As of 03/02/2023 8:21</p>
-            </div>
-            <div class="flex"> 
-                <p class="text-4xl">
-               
-                
-                </p>
-                <i class="text-center text-3xl pt-1 ml-1 fa-solid fa-dollar-sign"></i>
-            </div>
+console.log(container);
+
+const createUsernames = function (accs) {
+  accs.forEach(function (acc) {
+    acc.username = acc.owner
+      .toLowerCase()
+      .split(" ")
+      .map((name) => name[0])
+      .join("");
+  });
+
+};
+createUsernames(accounts);
+
+const displayMovements = function(movements, sort = false){
+  containerMovements.innerHTML = '';
+  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
+  movs.forEach(function(mov, index){
+    const type = mov > 0 ? 'deposit' : 'withdrawal';
+    const html  =  `
+    <div class="flex justify-between bg-white  border border-b-zinc-900 py-6 px-8">
+    <div class="flex">
+        <div class="rounded-xl text-center px-2 border border-inherit ${
+          mov < 0 ? "bg-red-500" : "bg-green-500"
+        }">
+            ${index + 1}  ${type}
         </div>
-        <div class="flex">
-            <div class="w-3/5 h-18">
-                ${money.reverse().map((item, index) => {
+        <div class="ml-4">03/02/2023</div>
+    </div>
+    <div class="flex"> 
+        <p class="movements__value">${mov}</p>
+        <i class="pt-1 ml-1 fa-solid fa-dollar-sign"></i>
+    </div>
+</div>
 
-                    return `
-                        <div class="flex justify-between bg-white  border border-b-zinc-900 py-6 px-8">
-                        <div class="flex">
-                            <div class="rounded-xl text-center px-2 border border-inherit ${item < 0 ? 'bg-red-500' : 'bg-green-500'}">
-                              ${index}  ${item < 0 ? 'WITHDRAWAL': 'DEPOSIT'}
-                            </div>
-                            <div class="ml-4">03/02/2023</div>
-                        </div>
-                        <div class="flex"> 
-                            <p class="">${item}</p>
-                            <i class="pt-1 ml-1 fa-solid fa-dollar-sign"></i>
-                        </div>
-                    </div>
-                    `
-                }).join("")
-            }
-                
-                   
-                
-            </div>
-                  
-            <div class="w-2/5 ml-4 ">
-                <div class="bg-yellow-400 rounded p-7">
-                    <h2 class="my-3 font-medium text-lg">Transfer money</h2>
-                    <div class="flex">
-                        <div class="text-center">
-                            <input class="rounded w-32 border border-inherit" type="text" placeholder="">
-                            <label for="">Transfer to</label>
-                        </div>
-                        <div class="text-center ">
-                            <input class="rounded mx-1 w-32 border border-inherit" type="text" placeholder="">
-                            <label for="">Amount</label>
-                        </div>
-                        <div class="text-center rounded h-6 px-2 bg-white">
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </div>
-                    </div>
-                </div>
-  
-                <div class="bg-green-500 rounded p-7 mt-4">
-                    <h2 class="my-3 font-medium text-lg">Request loan</h2>
-                    <div class="flex">
-                        <div class="text-center ">
-                            <input class="rounded mx-1 w-32 border border-inherit" type="text" placeholder="">
-                            <p>Amount</p>
-                        </div>
-                        <div class="text-center rounded h-6 w-12 bg-white">
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-red-500 rounded p-7 mt-4">
-                    <h2 class="my-3 font-medium text-lg">Close account</h2>
-                    <div class="flex">
-                        <div class="text-center ">
-                            <input class="rounded mx-1 w-32 border border-inherit" type="text" placeholder="">
-                            <p>Confirm user</p>
-                        </div>
-                        <div class="text-center ">
-                            <input class="rounded mx-1 w-32 border border-inherit" type="text" placeholder="">
-                            <p>Confirm PIN</p>
-                        </div>
-                        <div class="text-center rounded h-6 px-2 bg-white">
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-            `
-        }
-    
+`;
+containerMovements.insertAdjacentHTML('afterbegin', html);
+  });
+};
+const calcDisplayBalance = function (acc) {
+  const balance = acc.movements.reduce((acc, mov) => acc + mov, 0);
+  acc.balance = balance;
+  totalmoney.textContent = `${balance} EUR`;
+};
+
+const calcDisplaySummary = function (acc) {
+  const incomes = acc.movements
+    .filter((mov) => mov > 0)
+    .reduce((acc, mov) => acc + mov, 0);
+  labelSumIn.textContent = `${incomes} EUR`;
+
+  const out = acc.movements
+    .filter((mov) => mov < 0)
+    .reduce((acc, mov) => acc + mov, 0);
+  labelSumOut.textContent = `${Math.abs(out)} EUR`;
+
+  const interest = acc.movements
+    .filter((mov) => mov > 0)
+    .map((deposit) => (deposit * acc.interestRate) / 100)
+    .filter((int, i, arr) => {
+      console.log(arr);
+      return int >= 1;
+    })
+    .reduce((acc, int) => acc + int, 0);
+  console.log(interest);
+  labelSumInterest.textContent = `${interest} EUR`;
+};
+const updateUI = function (acc) {
+  displayMovements(acc.movements)
+  calcDisplayBalance(acc);
+  calcDisplaySummary(acc);
+};
+
+let currentAccount;
+form.addEventListener("click", (e) => {
+  e.preventDefault();
+  currentAccount = accounts.find((acc) => acc.owner === username.value);
+  // console.log(currentAccount);
+  accounts.forEach((item) => {
+    if (username.value == item.owner && iduser.value == item.pin) {
+      // clear input
+      container.style.display = 'block';
+     
+      username.value = iduser.value = "";
+      updateUI(currentAccount);
+
+      // const money = item.movements;
+
+      labelWelCome.textContent = `Welcome back, ${item.owner.split(" ")[0]}`;
+      
+    }
   });
 });
+
+btnTransFer.addEventListener("click", function (e) {
+  e.preventDefault();
+  const amountValue = Number(amount.value);
+  const receiverAcc = accounts.find((acc) => acc.username === transferTo.value);
+  console.log(amountValue, receiverAcc, currentAccount);
+  console.log(currentAccount.balance);
+  console.log(amountValue);
+  amount.value = transferTo.value = " ";
+  if (
+    amountValue > 0 && receiverAcc &&
+    currentAccount.balance >= amountValue 
+  ) {
+    currentAccount.movements.push(-amountValue);
+    // receiverAcc.movements.push(amountValue);
+    updateUI(currentAccount);
+  }
+});
+
+btnLoan.addEventListener('click', function(e){
+  e.preventDefault();
+  const amount = Number(inputLoanAmount.value);
+  if(amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)){
+    // add movement
+    currentAccount.movements.push(amount);
+    // Update UI
+    updateUI(currentAccount)
+  }
+  inputLoanAmount.value = ""
+})
+
+btnClose.addEventListener('click', function(e){
+  e.preventDefault();
+  if(inputCloseName.value === currentAccount.username && Number(inputClosePin.value)){
+    const index = accounts.findIndex(acc => acc.username === currentAccount.username)
+    console.log(index)
+    accounts.splice(index, 1);
+    container.style.opacity = 0;
+    labelWelCome.textContent = `Log in to get started`;
+
+  }
+  inputCloseName.value = inputClosePin.value = " ";
+
+})
+
+let sorted = false;
+
+
+btnSort.addEventListener('click', function(e){
+  e.preventDefault();
+  displayMovements(currentAccount.movements, !sorted)
+  sorted = !sorted;
+})
+
+
+totalmoney.addEventListener('click', function(){
+  const movementsUI = Array.from(document.querySelectorAll('.movements__value'));
+  console.log(movementsUI.map(el => Number(el.textContent.replace('USD', ''))));
+  console.log(movementsUI);
+  const movementsUI2 = [...document.querySelectorAll('.movements__value')];
+})
